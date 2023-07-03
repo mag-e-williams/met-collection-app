@@ -65,7 +65,6 @@ export default function Header({searchTerm, onSearchTerm}: HeaderProps) {
         <Container maxWidth="xl">
 
           <Toolbar disableGutters>
-            <ImageSearchIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
             <Typography
               variant="h6"
               noWrap
@@ -82,7 +81,7 @@ export default function Header({searchTerm, onSearchTerm}: HeaderProps) {
                 flexGrow: 1,
               }}
             >
-              PEXELS
+              THE MET
             </Typography>
 
             <Search>
