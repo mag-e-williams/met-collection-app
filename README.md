@@ -42,3 +42,4 @@ As a developer working on the project locally...
 - [x] I have access to all project-specific local setup instructions I need to run the project
 - [x] I can install any required dependencies with npm or yarn
 - [x] I can compile and run the project in one step
+# privy-coding-challenge
