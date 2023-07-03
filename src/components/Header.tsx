@@ -55,28 +55,26 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 type HeaderProps =  {
     searchTerm?: string;
-    onSearchTerm: (event: React.ChangeEvent<HTMLInputElement>) => void;
+    onSearchTerm: (event: React.FocusEventHandler<HTMLInputElement | any>) => void;
 };
 
 export default function Header({searchTerm, onSearchTerm}: HeaderProps) {
+
+
   return (
     <Box sx={{ flexGrow: 1 }}>
-      <AppBar position="fixed">
+      <AppBar position="fixed" sx={{ backgroundColor: "#982932" }}>
         <Container maxWidth="xl">
 
           <Toolbar disableGutters>
             <Typography
-              variant="h6"
+              variant="h4"
               noWrap
               component="a"
               href="/"
               sx={{
                 mr: 2,
                 display: { xs: 'none', md: 'flex' },
-                fontFamily: 'monospace',
-                fontWeight: 700,
-                letterSpacing: '.3rem',
-                color: 'inherit',
                 textDecoration: 'none',
                 flexGrow: 1,
               }}
@@ -92,8 +90,9 @@ export default function Header({searchTerm, onSearchTerm}: HeaderProps) {
               <StyledInputBase
                 placeholder="Search…"
                 inputProps={{ 'aria-label': 'search' }}
-                value={searchTerm}
-                onChange={onSearchTerm}
+                // value={searchTerm}
+                // onBlurCapture={onSearchTerm}
+                onBlur={onSearchTerm}
               />
             </Search>
 

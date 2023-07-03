@@ -3,5 +3,11 @@ export type MetObject = {
     objectEndDate: string,
     department: string, 
     objectName: string, 
-    artistDisplayName: string
+    artistDisplayName: string,
+    creditLine: string,
+    title: string,
+    primaryImage: string,
+    objectURL: string,
+    isHighlight: boolean,
+    objectDate: string,
 }

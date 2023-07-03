@@ -11,7 +11,30 @@ export type SxProps = MuiSxProps<AugmentedTheme>;
 
 export function getTheme(): Theme {
   const themeWithColorMode = extendTheme({
+    typography: {
+      fontFamily: [
+        'Playfair Display',
+        'Mulish',
+        '-apple-system',
+        'BlinkMacSystemFont',
+        '"Segoe UI"',
+        'Roboto',
+        '"Helvetica Neue"',
+        'Arial',
+        'sans-serif',
+        '"Apple Color Emoji"',
+        '"Segoe UI Emoji"',
+        '"Segoe UI Symbol"',
+      ].join(','),
+    },
     components: {
+      MuiCard: {
+        styleOverrides: {
+          root: ({ theme }) => ({
+            background: '#FAFAFA',
+          }),
+        },
+      },
       MuiContainer: {
         defaultProps: {
           fixed: true,
@@ -34,6 +57,75 @@ export function getTheme(): Theme {
               maxWidth: 1130,
             },
           }),
+        },
+      },
+      MuiTypography: {
+        variants: [
+          {
+            props: { variant: 'h1' },
+            style: ({ theme }) => ({
+              color: '#333333',
+              fontFamily: 'Playfair Display'
+            }),
+          },
+          {
+            props: { variant: 'h2' },
+            style: ({ theme }) => ({
+              color: '#333333',
+              fontFamily: 'Playfair Display'
+            }),
+          },
+          {
+            props: { variant: 'h3' },
+            style: ({ theme }) => ({
+              color: '#FFFFFF',
+              fontFamily: 'Playfair Display'
+            }),
+          },
+          {
+            props: { variant: 'h4' },
+            style: ({ theme }) => ({
+              color: '#FFFFFF',
+              fontFamily: 'Playfair Display'
+            }),
+          },
+          {
+            props: { variant: 'h5' },
+            style: ({ theme }) => ({
+              color: '#333333',
+              fontFamily: 'Playfair Display',
+            }),
+          },
+          {
+            props: { variant: 'h6' },
+            style: ({ theme }) => ({
+              color: '#333333',
+              fontFamily: 'Playfair Display'
+            }),
+          },
+          {
+            props: { variant: 'body1' },
+            style: ({ theme }) => ({
+              color: '#767676',
+              fontFamily: 'Mulish',
+              fontSize: '12pt',
+            }),
+          },
+          {
+            props: { variant: 'body2' },
+            style: ({ theme }) => ({
+              color: '#767676',
+              fontFamily: 'Mulish'
+
+            }),
+          },
+        ],
+        styleOverrides: {
+          root: {
+            // Resets the original value
+            color: '#333333',
+            textRendering: 'optimizeLegibility',
+          },
         },
       },
     },

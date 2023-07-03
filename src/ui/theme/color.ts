@@ -1,0 +1,9 @@
+export const COLORS = {
+    PRIMARY: '#E4002B',
+    SECONDARY: '#982932',
+    TEXT: '#333333',
+    MUTED_TEXT: '#767676',
+    DEFAULT_BACKGROUND: '#FFFFFF',
+    SECONDARY_BACKGROUND: '#FAFAFA',
+};
+  

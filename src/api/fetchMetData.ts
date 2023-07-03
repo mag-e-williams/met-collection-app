@@ -6,15 +6,12 @@ import { MetSearchResponse } from "@/types/MetSearchResponse"
 
 const BASE_URL= 'https://collectionapi.metmuseum.org/public/collection/v1/'
 
-export async function fetchMetData(search: string = 'hairbrush'): Promise<MetObject[]> {
-    let url = `${BASE_URL}`
-    if (search != '') {
-        const query_params = `search?q=${search}`
-        url = `${BASE_URL}${query_params}`
-    } 
+export async function fetchMetData(searchTerm: string = 'hairbrush'): Promise<MetObject[]> {
+  const query_params = `search?q=${searchTerm}`
+  const url = `${BASE_URL}${query_params}`
 
   const objectIds: MetSearchResponse = await (await fetch(url)).json()
-  const objectDetailsList = objectIds.objectIDs.map(async (objId: number) => {
+  const objectDetailsList = objectIds.objectIDs.slice(0,20).map(async (objId: number) => {
     const objectUrl = `${BASE_URL}objects/${objId}`
 
     const objectDetails = await (await fetch(objectUrl)).json()
@@ -29,6 +26,5 @@ export async function fetchMetData(search: string = 'hairbrush'): Promise<MetObj
     return b.objectEndDate - a.objectEndDate
   })
 
-//   return sortedObjects.slice(0,5)
-    return sortedObjects
+  return sortedObjects
 }
