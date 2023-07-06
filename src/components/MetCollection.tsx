@@ -9,9 +9,9 @@ import type { MetObjects } from '@/types/MetObjects';
 
 import Header from './Header';
 import ObjectTable from './ObjectTable';
-import { Container, Pagination, PaginationItem, Typography } from '@mui/material';
+import { Container, Pagination, PaginationItem, Stack, Typography } from '@mui/material';
 
-const LIMIT = 16;
+const LIMIT = 10;
 
 export default function MetCollection() {
   const router = useRouter();
@@ -19,19 +19,21 @@ export default function MetCollection() {
   const [museumObjectsData, setMuseumObjectsData] = useState<MetObjectsData[]>([]);
 
   const [page, setPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>();
+  const [searchTerm, setSearchTerm] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>();
+
+  
 
   useEffect(() => {
     const fetchObjects = async () => {
       const response = await fetchMetObjects(searchTerm);
-      setPage(1)
       setMuseumObjects(response)
       setTotalPages(Math.ceil(response.total / LIMIT))
     }
-
-    fetchObjects()
-  }, [searchTerm]);
+    if (searchTerm) {
+      fetchObjects()
+    }
+  }, [searchTerm, setMuseumObjects, setTotalPages]);
 
   useEffect(() => {
     const fetchObjectsData = async () => {
@@ -47,16 +49,48 @@ export default function MetCollection() {
   const handlePageChange = (event: React.ChangeEvent<unknown>, selectedPage: number) => {
     event.stopPropagation;
     setPage(selectedPage);
+    updateURL(selectedPage, searchTerm);
   };
+
+  const handleSearch = (e: string) => {
+    setSearchTerm(e)
+    setPage(1);
+    updateURL(page, e);
+  };
+
+  const updateURL = (selectedPage: number, term?: string) => {
+    let queryParams = new URLSearchParams();
+    if (selectedPage) {
+      queryParams.append('page',  selectedPage.toString())
+    }
+    if (term) {
+      queryParams.append('search', term)
+    }
+
+    router.push(`/?${queryParams.toString()}`);
+  };
+
+  useEffect(() => {
+    const { page: urlPage, search: urlSearch } = router.query;
+    setPage(Number(urlPage) || 1);
+    setSearchTerm(urlSearch as string || '');
+  }, [router.query]);
   
   return (
     <>
-      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Header searchTerm={searchTerm} setSearchTerm={handleSearch} />
       
       <Container sx={{ marginTop: 14}}>
-        <Typography variant="h2" sx={{ marginBottom: 4}}>
-          Collection Catalog
-        </Typography>
+        <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">
+          <Typography variant="h2" sx={{ marginBottom: 4}}>
+            Collection Catalog
+          </Typography>
+
+          <Typography variant="h6" sx={{ marginBottom: 4}}>
+            {museumObjects?.total.toLocaleString()} Results for &apos;{searchTerm}&apos;
+          </Typography>
+        </Stack>
+
         <ObjectTable objects={museumObjectsData}/>
 
         <Container 
