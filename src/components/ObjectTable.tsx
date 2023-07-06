@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { MetObjectsData } from "@/types/MetObjectsData";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
+import { useRouter } from 'next/router';
 
 import Image from "next/image";
 
@@ -64,9 +65,15 @@ type ObjectTableProps =  {
 };
 
 export default function ObjectTable({objects}: ObjectTableProps) {
+  const router = useRouter();
+
   if (!objects) {
     return null
   }
+
+  const handleRowClick = (objectID: Number) => {
+    router.push(`/collection/${objectID}`);
+  };
 
   return (
     <TableContainer component={Paper}>
@@ -74,7 +81,6 @@ export default function ObjectTable({objects}: ObjectTableProps) {
         <TableHead>
           <TableRow >
             <TableCell align={'left'}></TableCell>
-            
             {COLS.map(col => (
               <TableCell key={col.id} align={col.align || 'right'} sx={{ fontWeight: 750 }}>{col.name}</TableCell>
             ))}
@@ -86,8 +92,11 @@ export default function ObjectTable({objects}: ObjectTableProps) {
             <TableRow
               hover
               key={row.objectID}
-              sx={{'&:last-child td, &:last-child th': { border: 0 } }}
-            >
+              onClick={() => handleRowClick(row.objectID)}
+              sx={{
+                '&:last-child td, &:last-child th': { border: 0 }, 
+                '&:hover': { cursor: 'pointer' } 
+              }}>
               <TableCell align={'left'} sx={{width: '50px'}}>
                 <TableThumbnail image={row.primaryImageSmall}/>
               </TableCell>

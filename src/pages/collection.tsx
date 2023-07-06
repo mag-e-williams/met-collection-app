@@ -7,13 +7,14 @@ import { fetchMetObjectsData } from '@/api/fetchMetObjectsData';
 import type { MetObjectsData } from '@/types/MetObjectsData';
 import type { MetObjects } from '@/types/MetObjects';
 
-import Header from './Header';
-import ObjectTable from './ObjectTable';
+import Header from '@/components/Header';
+import ObjectTable from '@/components/ObjectTable';
 import { Container, Pagination, PaginationItem, Stack, Typography } from '@mui/material';
+import ObjectList from '@/components/ObjectList';
 
-const LIMIT = 10;
+const LIMIT = 16;
 
-export default function MetCollection() {
+export default function Collection() {
   const router = useRouter();
   const [museumObjects, setMuseumObjects] = useState<MetObjects>();
   const [museumObjectsData, setMuseumObjectsData] = useState<MetObjectsData[]>([]);
@@ -21,8 +22,6 @@ export default function MetCollection() {
   const [page, setPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>('');
   const [totalPages, setTotalPages] = useState<number>();
-
-  
 
   useEffect(() => {
     const fetchObjects = async () => {
@@ -38,7 +37,7 @@ export default function MetCollection() {
   useEffect(() => {
     const fetchObjectsData = async () => {
       if (museumObjects) {
-        const response = await fetchMetObjectsData(museumObjects, page, LIMIT);
+        const response = await fetchMetObjectsData(museumObjects.objectIDs, page, LIMIT);
         setMuseumObjectsData(response)
       }
     }
@@ -67,7 +66,7 @@ export default function MetCollection() {
       queryParams.append('search', term)
     }
 
-    router.push(`/?${queryParams.toString()}`);
+    router.push(`/collection?${queryParams.toString()}`);
   };
 
   useEffect(() => {
@@ -83,7 +82,7 @@ export default function MetCollection() {
       <Container sx={{ marginTop: 14}}>
         <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">
           <Typography variant="h2" sx={{ marginBottom: 4}}>
-            Collection Catalog
+            Search The Collection
           </Typography>
 
           <Typography variant="h6" sx={{ marginBottom: 4}}>
@@ -91,8 +90,9 @@ export default function MetCollection() {
           </Typography>
         </Stack>
 
-        <ObjectTable objects={museumObjectsData}/>
-
+        {/* <ObjectTable objects={museumObjectsData}/> */}
+        <ObjectList objects={museumObjectsData}/> 
+        
         <Container 
           sx={{ 
             marginY: 6,
