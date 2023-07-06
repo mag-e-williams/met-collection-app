@@ -7,6 +7,7 @@ export type MetObjectsData = {
     creditLine: string,
     title: string,
     primaryImage: string,
+    primaryImageSmall: string,
     objectURL: string,
     isHighlight: boolean,
     objectDate: string,

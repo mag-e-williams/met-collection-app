@@ -63,6 +63,13 @@ export const getTheme = () => createTheme({
         }),
       },
     },
+    MuiTableHead: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          fontWeight: 900
+        }),
+      },
+    },
    
   }
 

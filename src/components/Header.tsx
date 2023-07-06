@@ -38,14 +38,11 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
     },
     paddingLeft: `calc(1em + ${theme.spacing(4)})`,
     transition: theme.transitions.create('width'),
-    width: '100%',
     color: 'white',
-    [theme.breakpoints.up('sm')]: {
-      width: '8ch',
-      '&:focus': {
-        width: '12ch',
-        borderBottom: '2px solid white',
-      },
+    width: '10ch',
+    '&:focus': {
+      width: '20ch',
+      borderBottom: '2px solid white',
     },
   },
 }));
@@ -66,12 +63,12 @@ const MetLogo = () => {
 }
 
 type HeaderProps =  {
-  searchTerm?: string;
-  setSearchTerm: React.Dispatch<React.SetStateAction<string | undefined>>;
+  searchTerm: string;
+  setSearchTerm: (e: string) => void ;
 };
 
 export default function Header({searchTerm, setSearchTerm}: HeaderProps) {
-  const [headerSearchTerm, setHeaderSearchTerm] = useState<string>();
+  const [headerSearchTerm, setHeaderSearchTerm] = useState<string>(searchTerm);
   const [focus, setFocus] = useState<boolean>(false);
 
   const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {

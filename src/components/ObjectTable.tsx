@@ -1,7 +1,7 @@
+import React, { useState } from 'react';
 import { MetObjectsData } from "@/types/MetObjectsData";
 import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from "@mui/material";
-// import { Image } from "./utilComponents/Image";
-// import { useCurrentImageSizes } from "@/hooks/useCurrentImageSizes";
+
 import Image from "next/image";
 
 type ColumnType = {
@@ -14,11 +14,6 @@ const COLS: ColumnType[] = [
   {
     id: 'title', 
     name: 'Title',  
-    align: 'left'
-  },
-  {
-    id: 'objectID', 
-    name: 'ID',  
     align: 'left'
   },
   {
@@ -36,30 +31,31 @@ const COLS: ColumnType[] = [
 
 ]
 
-
-type TableImageProps =  {
+type TableThumbnailProps =  {
   image?: string;
 };
 
-function TableImage({image}: TableImageProps) {
+function TableThumbnail({image}: TableThumbnailProps) {
+  const [loaded, setLoaded] = useState<boolean>(false);
+
   if (!image) {
     return null
   }
   return (
     <Image
-    src={`${image}?w=400&auto=format`}
-    alt={image}
-    width={0}
-    height={0}
-    loading="lazy"
-    sizes="100vw"
-    style={{
-      borderRadius: 4,
-      display: 'block',
-      width: '60px',
-      height: 'auto',
-    }}
-  />
+      onLoad={() => setLoaded(true)} 
+      src={`${image}?auto=format`}
+      alt={image}
+      width={0}
+      height={0}
+      loading="lazy"
+      sizes="100vw"
+      style={{
+        borderRadius: 4,
+        display: 'block',
+        width: '100%',
+        height: 'auto',
+    }}/>
   )
 }
 
@@ -78,9 +74,9 @@ export default function ObjectTable({objects}: ObjectTableProps) {
         <TableHead>
           <TableRow >
             <TableCell align={'left'}></TableCell>
-
+            
             {COLS.map(col => (
-            <TableCell key={col.id} align={col.align || 'right'}>{col.name}</TableCell>
+              <TableCell key={col.id} align={col.align || 'right'} sx={{ fontWeight: 750 }}>{col.name}</TableCell>
             ))}
           </TableRow>
         </TableHead>
@@ -92,9 +88,8 @@ export default function ObjectTable({objects}: ObjectTableProps) {
               key={row.objectID}
               sx={{'&:last-child td, &:last-child th': { border: 0 } }}
             >
-
-              <TableCell align={'left'}>
-                <TableImage image={row.primaryImage}/>
+              <TableCell align={'left'} sx={{width: '50px'}}>
+                <TableThumbnail image={row.primaryImageSmall}/>
               </TableCell>
 
               {COLS.map(col => (
