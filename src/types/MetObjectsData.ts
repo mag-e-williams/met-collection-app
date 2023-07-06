@@ -1,4 +1,4 @@
-export type MetObject = {
+export type MetObjectsData = {
     objectID: number,
     objectEndDate: string,
     department: string, 

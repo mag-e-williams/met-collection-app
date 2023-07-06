@@ -1,6 +1,6 @@
 import CssBaseline from '@mui/material/CssBaseline';
 import { getTheme } from '.';
-import { Experimental_CssVarsProvider as CssVarsProvider } from '@mui/material/styles';
+import { Experimental_CssVarsProvider as CssVarsProvider, ThemeProvider, createTheme } from '@mui/material/styles';
 
 /**
  * Created just once per app lifecycle
@@ -12,9 +12,10 @@ const theme = getTheme();
  */
 export function GlobalStyleProvider({ children }: { children: React.ReactNode }) {
   return (
-    <CssVarsProvider theme={theme} disableTransitionOnChange defaultMode="system">
-      <CssBaseline />
+
+    
+    <ThemeProvider theme={theme}>
       {children}
-    </CssVarsProvider>
+    </ThemeProvider>
   );
 }
