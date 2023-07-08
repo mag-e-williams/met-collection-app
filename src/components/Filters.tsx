@@ -1,13 +1,21 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-import { Checkbox,Chip,Divider,FormControl, FormControlLabel, OutlinedInput, Stack, Typography } from '@mui/material';
+import { Checkbox,Chip,Divider, FormControlLabel, Stack, Typography } from '@mui/material';
 import { filters, checkboxFilters, FilterCategory } from '@/utils/filters';
 
 import FilterSelect from './FilterSelect';
+import FilterSearch from './FilterSearch';
 
-export default function Filters() {
-  const [searchTerm, setSearchTerm] = useState<string>();
-  const [selectedFilters, setSelectedFilters] = useState<FilterCategory[]>([]);
+type FilterProps =  {
+  searchTerm: string;
+  setSearchTerm: (e: string) => void;
+
+  selectedFilters: FilterCategory[]; 
+  setSelectedFilters: React.Dispatch<React.SetStateAction<FilterCategory[]>>;
+}
+
+
+export default function Filters({searchTerm, setSearchTerm, selectedFilters, setSelectedFilters}: FilterProps) {
 
   function deleteChip(checkedFilter: FilterCategory) {
     let newSelectedFilters = [...selectedFilters]
@@ -30,31 +38,19 @@ export default function Filters() {
       setSelectedFilters(newSelectedFilters)
     }
   }
+
   return (
     <Stack sx={{ m: 1, flexGrow: 1 }} spacing={2}>
-      <Stack direction="row">
-        <FormControl  size="small" fullWidth variant="outlined">
-          <OutlinedInput
-            id="outlined-adornment-weight"
-            aria-describedby="outlined-weight-helper-text"
-            inputProps={{
-              'aria-label': 'weight',
-            }}
-          />
-        </FormControl>
-      </Stack>
+      <FilterSearch searchTerm={searchTerm || ''} setSearchTerm={setSearchTerm}/>
 
       <Typography>
         Filter By
       </Typography>
 
       <Stack direction="row" spacing={1.5}>
-        {Object.keys(filters).map(e => {
-          return (
+        {Object.keys(filters).map(e => (
           <FilterSelect key={e} filterCategory={e} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
-          )
-        }
-        )}
+        ))}
       </Stack> 
 
       <Typography>

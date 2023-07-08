@@ -4,50 +4,10 @@ import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
-import InputBase from '@mui/material/InputBase';
-import SearchIcon from '@mui/icons-material/Search';
 
 import { Container } from '@mui/material';
 import { useRouter } from 'next/router';
-import { styled } from '@mui/material/styles';
 
-const Search = styled('div')(({ theme }) => ({
-  position: 'relative',
-  marginLeft: 0,
-  width: '100%',
-  [theme.breakpoints.up('sm')]: {
-    marginLeft: theme.spacing(1),
-    width: 'auto',
-  },
-}));
-
-const IconWrapper = styled('div')(({ theme }) => ({
-  padding: theme.spacing(0, 2),
-  height: '100%',
-  position: 'absolute',
-  pointerEvents: 'none',
-  display: 'flex',
-  alignItems: 'center',
-  justifyContent: 'center',
-}));
-
-const StyledInputBase = styled(InputBase)(({ theme }) => ({
-  color: 'white',
-  '& .MuiInputBase-input': {
-    '&::placeholder': {
-      textOverflow: 'none',
-      color: 'white'
-    },
-    paddingLeft: `calc(1em + ${theme.spacing(4)})`,
-    transition: theme.transitions.create('width'),
-    color: 'white',
-    width: '10ch',
-    '&:focus': {
-      width: '20ch',
-      borderBottom: '2px solid white',
-    },
-  },
-}));
 
 const MetLogo = () => {
   return (
@@ -64,35 +24,8 @@ const MetLogo = () => {
   )
 }
 
-type HeaderProps =  {
-  searchTerm: string;
-  setSearchTerm: (e: string) => void ;
-};
-
-export default function Header({searchTerm, setSearchTerm}: HeaderProps) {
+export default function Header() {
   const router = useRouter();
-
-  const [headerSearchTerm, setHeaderSearchTerm] = useState<string>(searchTerm);
-  const [focus, setFocus] = useState<boolean>(false);
-
-  const handleSearchChange = (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    event.stopPropagation;
-    const term = event.target.value; 
-    setHeaderSearchTerm(term)
-  }
-
-  // submit search phrase
-  useEffect(() => {
-    const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key == 'Enter' && focus) {
-        setSearchTerm(headerSearchTerm)
-      }
-    };
-    window.addEventListener('keydown', handleKeyDown);
-    return () => {
-      window.removeEventListener('keydown', handleKeyDown);
-    };
-  }, [headerSearchTerm, focus, setSearchTerm]);
 
   return (
     <Box sx={{ flexGrow: 1 }}>
@@ -122,23 +55,6 @@ export default function Header({searchTerm, setSearchTerm}: HeaderProps) {
             >
               <MetLogo />
             </Typography>
-
-
-
-            <Search>
-              <IconWrapper>
-                <SearchIcon />
-              </IconWrapper>
-              
-              <StyledInputBase
-                placeholder="Search"
-                inputProps={{ 'aria-label': 'search' }}
-                value={headerSearchTerm}
-                onChange={(e) => handleSearchChange(e)}
-                onFocus={() => setFocus(true)}
-                onBlur={() => setFocus(false)}
-              />
-            </Search>
 
           </Toolbar>
         </Container>

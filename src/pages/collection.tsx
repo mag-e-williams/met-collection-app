@@ -12,6 +12,7 @@ import ObjectList from '@/components/ObjectList';
 
 import { Container, Pagination, Stack, Typography } from '@mui/material';
 import Filters from '@/components/Filters';
+import { FilterCategory } from '@/utils/filters';
 
 const PAGE_SIZE = 40;
 
@@ -22,6 +23,7 @@ export default function Collection() {
 
   const [page, setPage] = useState<number>(1);
   const [searchTerm, setSearchTerm] = useState<string>();
+  const [selectedFilters, setSelectedFilters] = useState<FilterCategory[]>([]);
   const [totalPages, setTotalPages] = useState<number>();
 
 
@@ -67,7 +69,6 @@ export default function Collection() {
     if (term) {
       queryParams.append('search', term)
     }
-
     router.push(`/collection?${queryParams.toString()}`);
   };
 
@@ -79,12 +80,12 @@ export default function Collection() {
   
   return (
     <>
-      <Header searchTerm={searchTerm || ''} setSearchTerm={handleSearch} />
+      <Header />
       
       <Container sx={{ marginTop: 14}}>
         <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">
           <Typography variant="h2" sx={{ marginBottom: 4}}>
-            Search The Collection
+            Search The Collection {searchTerm}
           </Typography>
 
           <Typography variant="h6" sx={{ marginBottom: 4}}>
@@ -92,7 +93,7 @@ export default function Collection() {
           </Typography>
         </Stack>
 
-        <Filters />
+        <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
         <ObjectList objects={museumObjectsData}/> 
         
         <Container 

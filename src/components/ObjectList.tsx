@@ -107,7 +107,7 @@ export default function ObjectList({objects}: ObjectListProps) {
           }}>
             
           <Box sx={{width: '100%'}}>
-            <ObjectThumbnail image={item.primaryImage}/>
+            <ObjectThumbnail image={item.primaryImageSmall}/>
           </Box>
 
           <ImageListItemBar
