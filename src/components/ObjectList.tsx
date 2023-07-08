@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { MetObjectsData } from "@/types/MetObjectsData";
 import { Box, Container, ImageList, ImageListItem, ImageListItemBar, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
 import { useRouter } from 'next/router';
+import { ImageOff } from 'lucide-react';
 
 import Image from "next/image";
 
@@ -23,17 +24,20 @@ function NoImageSkeleton() {
         variant="rectangular" 
         height={200} 
         style={{
-          borderRadius: 4,
+          backgroundColor: '#fff',
+          width: '100%',
+          borderRadius: 1,
         }}
       />
       <Typography
         style={{
           position: 'absolute',
-          top: '50%',
+          top: '45%',
           left: '50%',
           transform: 'translate(-50%, -50%)',
         }}
-        > NO IMAGE
+        > 
+        <ImageOff size={30} color="#a3a3a3" />
       </Typography>
     </Box>
   )
@@ -54,7 +58,7 @@ function ObjectThumbnail({image}: ObjectThumbnailProps) {
           loading="lazy"
           sizes="100vw"
           style={{
-            borderRadius: 4,
+            borderRadius: 1,
             display: 'block',
             width: '100%',
             height: 'auto',
@@ -93,23 +97,21 @@ export default function ObjectList({objects}: ObjectListProps) {
             position: 'relative',
             padding: 2,
             paddingBottom: '50px',
-            borderRadius: 1,
             '&:hover': {
               backgroundColor: '#c7c7c7',
               cursor: 'pointer'
             }
           }}>
-          <Container sx={{width: '100%'}}>
+          <Box sx={{width: '100%'}}>
             <ObjectThumbnail image={item.primaryImage}/>
-          </Container>
+          </Box>
 
           <ImageListItemBar
             title={item.title}
             subtitle={<span>{item.objectDate}</span>}
             position="below"
             sx={{ 
-              marginX: 5, 
-
+              marginX: 2, 
               position:'absolute', 
               bottom: 0,
             }}

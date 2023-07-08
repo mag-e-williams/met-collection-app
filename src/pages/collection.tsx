@@ -8,11 +8,12 @@ import type { MetObjectsData } from '@/types/MetObjectsData';
 import type { MetObjects } from '@/types/MetObjects';
 
 import Header from '@/components/Header';
-import ObjectTable from '@/components/ObjectTable';
-import { Container, Pagination, PaginationItem, Stack, Typography } from '@mui/material';
 import ObjectList from '@/components/ObjectList';
 
-const LIMIT = 16;
+import { Container, Pagination, Stack, Typography } from '@mui/material';
+import Filters from '@/components/Filters';
+
+const PAGE_SIZE = 40;
 
 export default function Collection() {
   const router = useRouter();
@@ -27,7 +28,7 @@ export default function Collection() {
     const fetchObjects = async () => {
       const response = await fetchMetObjects(searchTerm);
       setMuseumObjects(response)
-      setTotalPages(Math.ceil(response.total / LIMIT))
+      setTotalPages(Math.ceil(response.total / PAGE_SIZE))
     }
     if (searchTerm) {
       fetchObjects()
@@ -37,7 +38,7 @@ export default function Collection() {
   useEffect(() => {
     const fetchObjectsData = async () => {
       if (museumObjects) {
-        const response = await fetchMetObjectsData(museumObjects.objectIDs, page, LIMIT);
+        const response = await fetchMetObjectsData(museumObjects.objectIDs, page, PAGE_SIZE);
         setMuseumObjectsData(response)
       }
     }
@@ -86,11 +87,11 @@ export default function Collection() {
           </Typography>
 
           <Typography variant="h6" sx={{ marginBottom: 4}}>
-            {museumObjects?.total.toLocaleString()} Results for &apos;{searchTerm}&apos;
+            {museumObjects?.total.toLocaleString()} results for {searchTerm}
           </Typography>
         </Stack>
 
-        {/* <ObjectTable objects={museumObjectsData}/> */}
+
         <ObjectList objects={museumObjectsData}/> 
         
         <Container 

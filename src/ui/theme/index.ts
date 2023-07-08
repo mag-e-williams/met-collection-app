@@ -70,6 +70,14 @@ export const getTheme = () => createTheme({
         }),
       },
     },
+    MuiInputBase: {
+      styleOverrides: {
+        root: ({ theme }) => ({
+          fontWeight: 700,
+          borderColor: 'orange'
+        }),
+      },
+    },
    
   }
 

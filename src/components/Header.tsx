@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 
-import { styled } from '@mui/material/styles';
 import AppBar from '@mui/material/AppBar';
 import Box from '@mui/material/Box';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import InputBase from '@mui/material/InputBase';
 import SearchIcon from '@mui/icons-material/Search';
+
 import { Container } from '@mui/material';
+import { useRouter } from 'next/router';
+import { styled } from '@mui/material/styles';
 
 const Search = styled('div')(({ theme }) => ({
   position: 'relative',
@@ -68,6 +70,8 @@ type HeaderProps =  {
 };
 
 export default function Header({searchTerm, setSearchTerm}: HeaderProps) {
+  const router = useRouter();
+
   const [headerSearchTerm, setHeaderSearchTerm] = useState<string>(searchTerm);
   const [focus, setFocus] = useState<boolean>(false);
 
@@ -98,18 +102,28 @@ export default function Header({searchTerm, setSearchTerm}: HeaderProps) {
         <Container maxWidth="xl">
 
           <Toolbar disableGutters>
-            <Typography
+          <Typography
               variant="h1"
               noWrap
+              onClick={(e) => {
+                router.push('/collection').then(e => {
+                  router.reload()
+                });
+              }}
               sx={{
                 mr: 2,
                 display: 'flex',
                 textDecoration: 'none',
                 flexGrow: 1,
+                '&:hover': {
+                  cursor: "pointer"
+                }
               }}
             >
               <MetLogo />
             </Typography>
+
+
 
             <Search>
               <IconWrapper>
