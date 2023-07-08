@@ -21,8 +21,18 @@ export default function Collection() {
   const [museumObjectsData, setMuseumObjectsData] = useState<MetObjectsData[]>([]);
 
   const [page, setPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>('');
+  const [searchTerm, setSearchTerm] = useState<string>();
   const [totalPages, setTotalPages] = useState<number>();
+
+  const [regions, setRegions] = useState<string[]>([]);
+
+  // useEffect(() => {
+  //   const fetchFilterLists = async () => {
+  //     const response = await fetchMetFilterParams();
+  //   }
+  //   fetchFilterLists()
+  // }, []);
+
 
   useEffect(() => {
     const fetchObjects = async () => {
@@ -30,9 +40,7 @@ export default function Collection() {
       setMuseumObjects(response)
       setTotalPages(Math.ceil(response.total / PAGE_SIZE))
     }
-    if (searchTerm) {
-      fetchObjects()
-    }
+    fetchObjects()
   }, [searchTerm, setMuseumObjects, setTotalPages]);
 
   useEffect(() => {
@@ -78,7 +86,7 @@ export default function Collection() {
   
   return (
     <>
-      <Header searchTerm={searchTerm} setSearchTerm={handleSearch} />
+      <Header searchTerm={searchTerm || ''} setSearchTerm={handleSearch} />
       
       <Container sx={{ marginTop: 14}}>
         <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">
@@ -87,11 +95,11 @@ export default function Collection() {
           </Typography>
 
           <Typography variant="h6" sx={{ marginBottom: 4}}>
-            {museumObjects?.total.toLocaleString()} results for {searchTerm}
+            {museumObjects?.total.toLocaleString()} results {searchTerm && searchTerm != '' ? `for ${searchTerm}` : ''}
           </Typography>
         </Stack>
 
-
+        <Filters />
         <ObjectList objects={museumObjectsData}/> 
         
         <Container 
