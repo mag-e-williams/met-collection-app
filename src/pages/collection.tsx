@@ -24,15 +24,6 @@ export default function Collection() {
   const [searchTerm, setSearchTerm] = useState<string>();
   const [totalPages, setTotalPages] = useState<number>();
 
-  const [regions, setRegions] = useState<string[]>([]);
-
-  // useEffect(() => {
-  //   const fetchFilterLists = async () => {
-  //     const response = await fetchMetFilterParams();
-  //   }
-  //   fetchFilterLists()
-  // }, []);
-
 
   useEffect(() => {
     const fetchObjects = async () => {
@@ -40,7 +31,9 @@ export default function Collection() {
       setMuseumObjects(response)
       setTotalPages(Math.ceil(response.total / PAGE_SIZE))
     }
-    fetchObjects()
+    if (searchTerm) {
+      fetchObjects()
+    }
   }, [searchTerm, setMuseumObjects, setTotalPages]);
 
   useEffect(() => {

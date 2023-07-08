@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { MetObjectsData } from "@/types/MetObjectsData";
-import { Box, Container, ImageList, ImageListItem, ImageListItemBar, Paper, Skeleton, Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Typography } from "@mui/material";
+import { Box, ImageList, ImageListItem, ImageListItemBar, Skeleton, Typography } from "@mui/material";
 import { useRouter } from 'next/router';
 import { ImageOff } from 'lucide-react';
 
@@ -62,6 +62,8 @@ function ObjectThumbnail({image}: ObjectThumbnailProps) {
             display: 'block',
             width: '100%',
             height: 'auto',
+            maxHeight: '250px',
+            objectFit: "contain",
         }}/>
       ) : (
         <NoImageSkeleton />
@@ -86,7 +88,7 @@ export default function ObjectList({objects}: ObjectListProps) {
   };
 
   return (
-    <ImageList sx={{ width: 'auto', height: 'auto' }} cols={4}>
+    <ImageList sx={{ width: 'auto', height: 'auto' }} cols={4} rowHeight={270}>
       {objects.map((item) => (
         <ImageListItem 
           onClick={() => handleRowClick(item.objectID)}
@@ -97,11 +99,13 @@ export default function ObjectList({objects}: ObjectListProps) {
             position: 'relative',
             padding: 2,
             paddingBottom: '50px',
+            borderRadius: 1,
             '&:hover': {
-              backgroundColor: '#c7c7c7',
-              cursor: 'pointer'
+              backgroundColor: '#f0f0f0',
+              cursor: 'pointer',
             }
           }}>
+            
           <Box sx={{width: '100%'}}>
             <ObjectThumbnail image={item.primaryImage}/>
           </Box>
