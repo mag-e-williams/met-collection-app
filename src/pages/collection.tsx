@@ -9,9 +9,9 @@ import type { MetObjects } from '@/types/MetObjects';
 
 import Header from '@/components/Header';
 import ObjectList from '@/components/ObjectList';
+import Filters from '@/components/Filters';
 
 import { Container, Pagination, Stack, Typography } from '@mui/material';
-import Filters from '@/components/Filters';
 import { FilterCategory, checkboxFilters, filters } from '@/utils/filters';
 
 const PAGE_SIZE = 40;
