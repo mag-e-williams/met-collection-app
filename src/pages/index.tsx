@@ -1,8 +1,8 @@
 
-import Homepage from '@/components/Homepage';
+// import Homepage from '@/components/Homepage';
 
 function Page() {
-  return <Homepage />;
+  return <></>;
 }
 
 export default Page;
