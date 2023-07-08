@@ -1,6 +1,6 @@
 import React from 'react';
 
-export function Homepage() {
+export default function Homepage() {
 
   return (
     <>HOME</>
