@@ -11,12 +11,11 @@ type FilterProps =  {
   setSearchTerm: (e: string) => void;
 
   selectedFilters: FilterCategory[]; 
-  setSelectedFilters: React.Dispatch<React.SetStateAction<FilterCategory[]>>;
+  setSelectedFilters: (e: FilterCategory[]) => void;
 }
 
 
 export default function Filters({searchTerm, setSearchTerm, selectedFilters, setSelectedFilters}: FilterProps) {
-
   function deleteChip(checkedFilter: FilterCategory) {
     let newSelectedFilters = [...selectedFilters]
 
@@ -58,7 +57,7 @@ export default function Filters({searchTerm, setSearchTerm, selectedFilters, set
       </Typography>
       
       <Stack direction="row" spacing={1}>
-        {checkboxFilters.map(e => (
+        {checkboxFilters.filter(e=> e.category == 'checkboxes').map(e => (
           <FormControlLabel 
             key={e.title} 
             label={e.title}

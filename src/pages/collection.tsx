@@ -12,31 +12,42 @@ import ObjectList from '@/components/ObjectList';
 
 import { Container, Pagination, Stack, Typography } from '@mui/material';
 import Filters from '@/components/Filters';
-import { FilterCategory } from '@/utils/filters';
+import { FilterCategory, checkboxFilters, filters } from '@/utils/filters';
 
 const PAGE_SIZE = 40;
+
+function groupBy(objectArray: any[], property: string) {
+  return objectArray.reduce((acc, obj) => {
+     const key = obj[property];
+     if (!acc[key]) {
+        acc[key] = [];
+     }
+     // Add object to list for given key's value
+     acc[key].push(obj);
+     return acc;
+  }, {});
+}
 
 export default function Collection() {
   const router = useRouter();
   const [museumObjects, setMuseumObjects] = useState<MetObjects>();
   const [museumObjectsData, setMuseumObjectsData] = useState<MetObjectsData[]>([]);
 
-  const [page, setPage] = useState<number>(1);
-  const [searchTerm, setSearchTerm] = useState<string>();
+  const [page, setPage] = useState<number>(Number(router.query.page) || 1);
+  const [searchTerm, setSearchTerm] = useState<string>(router.query.search as string);
   const [selectedFilters, setSelectedFilters] = useState<FilterCategory[]>([]);
   const [totalPages, setTotalPages] = useState<number>();
 
-
   useEffect(() => {
     const fetchObjects = async () => {
-      const response = await fetchMetObjects(searchTerm);
+      const response = await fetchMetObjects(searchTerm, selectedFilters);
       setMuseumObjects(response)
       setTotalPages(Math.ceil(response.total / PAGE_SIZE))
     }
     if (searchTerm) {
       fetchObjects()
     }
-  }, [searchTerm, setMuseumObjects, setTotalPages]);
+  }, [searchTerm, selectedFilters, setMuseumObjects, setTotalPages]);
 
   useEffect(() => {
     const fetchObjectsData = async () => {
@@ -55,13 +66,19 @@ export default function Collection() {
     updateURL(selectedPage, searchTerm);
   };
 
-  const handleSearch = (e: string) => {
-    setSearchTerm(e)
+  const handleSearch = (e: string) => {    
     setPage(1);
-    updateURL(page, e);
+    setSearchTerm(e)
+    updateURL(1, e);
   };
 
-  const updateURL = (selectedPage: number, term?: string) => {
+  const handleFilter = (e: FilterCategory[]) => {
+    setPage(1);
+    setSelectedFilters(e)
+    updateURL(1, searchTerm, e);
+  };
+
+  const updateURL = (selectedPage: number, term?: string, filterParams?: FilterCategory[] ) => {
     let queryParams = new URLSearchParams();
     if (selectedPage) {
       queryParams.append('page',  selectedPage.toString())
@@ -69,7 +86,32 @@ export default function Collection() {
     if (term) {
       queryParams.append('search', term)
     }
+
+    if (filterParams) {
+      const checkboxFilterUrlIds = checkboxFilters.filter(e=>e.category == 'checkboxes').map(e=>e.urlId)
+      const checkboxFilterParams = filterParams.filter(e => checkboxFilterUrlIds.includes(e.urlId))
+      checkboxFilterParams?.forEach(e => (
+        queryParams.append(e.urlId, 'true')
+      ))
+
+      const dropdownFilterUrlIds = checkboxFilters.filter(e=>e.category == 'dropdown').map(e=>e.urlId)
+      const dropdownFilterParams = filterParams.filter(e => dropdownFilterUrlIds.includes(e.urlId))
+      
+      const orderedIds: string[] = []
+      dropdownFilterParams.forEach(e => {
+        if (!orderedIds.includes(e.urlId)) {
+          orderedIds.push(e.urlId)
+        }
+      })
+      const groupedParams = groupBy(dropdownFilterParams, 'urlId')
+      console.log(groupedParams)
+      orderedIds.forEach(e => {
+        queryParams.append(e, groupedParams[e].map((e: FilterCategory)=>e.title))
+      })
+    }
+
     router.push(`/collection?${queryParams.toString()}`);
+    
   };
 
   useEffect(() => {
@@ -85,7 +127,7 @@ export default function Collection() {
       <Container sx={{ marginTop: 14}}>
         <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">
           <Typography variant="h2" sx={{ marginBottom: 4}}>
-            Search The Collection {searchTerm}
+            Search The Collection
           </Typography>
 
           <Typography variant="h6" sx={{ marginBottom: 4}}>
@@ -93,7 +135,7 @@ export default function Collection() {
           </Typography>
         </Stack>
 
-        <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
+        <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={handleFilter}/>
         <ObjectList objects={museumObjectsData}/> 
         
         <Container 

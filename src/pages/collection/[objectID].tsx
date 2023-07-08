@@ -6,7 +6,6 @@ import { MetObjectsData } from '@/types/MetObjectsData';
 import { fetchMetObjectsData } from '@/api/fetchMetObjectsData';
 import { Container, Stack, Typography } from '@mui/material';
 
-
 export default function Collection() {
   const router = useRouter()
   const [objectID, setObjectId] = useState<string>(router.query.objectID as string);
@@ -27,7 +26,7 @@ export default function Collection() {
 
   return (
     <>
-      <Header searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
+      <Header/>
 
       <Container sx={{ marginTop: 14}}>
         <Stack direction="row" sx={{alignItems: 'baseline'}} justifyContent="space-between">

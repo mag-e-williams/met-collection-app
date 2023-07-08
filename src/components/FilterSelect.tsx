@@ -7,7 +7,7 @@ import type { FilterCategory } from '@/utils/filters';
 type FilterSelectProps = {
   filterCategory: string,
   selectedFilters: FilterCategory[],
-  setSelectedFilters: React.Dispatch<React.SetStateAction<FilterCategory[]>>
+  setSelectedFilters: (e: FilterCategory[]) => void;
 }
 
 export default function FilterSelect({filterCategory, selectedFilters, setSelectedFilters}: FilterSelectProps) {
