@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Autocomplete from '@mui/material/Autocomplete';
 import TextField from '@mui/material/TextField';
 import { filters } from '@/utils/filters';
@@ -6,19 +6,28 @@ import type { FilterCategory } from '@/utils/filters';
 
 type FilterSelectProps = {
   filterCategory: string,
-  selectedFilters: {[key: string]: string[]},
-  setSelectedFilters: React.Dispatch<React.SetStateAction<{ [key: string]: string[]; }>>
+  selectedFilters: FilterCategory[],
+  setSelectedFilters: React.Dispatch<React.SetStateAction<FilterCategory[]>>
 }
 
 export default function FilterSelect({filterCategory, selectedFilters, setSelectedFilters}: FilterSelectProps) {
-  const [selected, setSelected] = useState<FilterCategory[]>([]);
 
   const handleDropdownSelect = (selectedArray: FilterCategory[]) => {
-    selectedFilters
-    let newSelectedFilters = {...selectedFilters}
-    newSelectedFilters[filterCategory] = selectedArray.map(e=> e.title)
+    let newSelectedFilters = [...selectedFilters]
+    const selected = selectedFilters.filter(e => e.category == filterCategory)
 
-    setSelected(selectedArray)
+    if (selected.length > selectedArray.length) { // select deletion
+      const deletedElems = selected.filter(e => !selectedArray.includes(e))
+      deletedElems.forEach(e => {
+        const index = newSelectedFilters.indexOf(e);
+        if (index > -1) {
+          newSelectedFilters.splice(index, 1); 
+        } 
+      })
+    } else { // select addition
+      const newElem = selectedArray.slice(-1)[0]
+      newSelectedFilters = [...selectedFilters, newElem]
+    }
     setSelectedFilters(newSelectedFilters)
   }
 
@@ -26,7 +35,7 @@ export default function FilterSelect({filterCategory, selectedFilters, setSelect
     <Autocomplete
       fullWidth
       multiple
-      value={selected}
+      value={selectedFilters.filter(e => e.category == filterCategory)}
       onChange={(e, value) => handleDropdownSelect(value)}
       id="size-small-outlined-multi"
       size="small"

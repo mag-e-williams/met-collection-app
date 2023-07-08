@@ -1,49 +1,35 @@
 import React, { useState } from 'react';
 
-import Typography from '@mui/material/Typography';
-import { Checkbox,Chip,Divider,FormControl, FormControlLabel, OutlinedInput, Stack } from '@mui/material';
-import FilterSelect from './FilterSelect';
+import { Checkbox,Chip,Divider,FormControl, FormControlLabel, OutlinedInput, Stack, Typography } from '@mui/material';
 import { filters, checkboxFilters, FilterCategory } from '@/utils/filters';
-import { Category } from '@mui/icons-material';
 
-
-
-const FilterCategories: { [key: string]: string[] } = {
-  'checkboxes': [],
-  'Object Type / Materials': [],
-  'Geographic Location': [],
-  'Date / Era': [],
-  'Department': [],
-}
-
-// need ordered list for chips
-const FilterChips: FilterCategory[] = []
-
+import FilterSelect from './FilterSelect';
 
 export default function Filters() {
   const [searchTerm, setSearchTerm] = useState<string>();
-  const [selectedFilters, setSelectedFilters] = useState<{[key: string]: string[]}>(FilterCategories);
+  const [selectedFilters, setSelectedFilters] = useState<FilterCategory[]>([]);
 
-  function deleteChip(category: string, chip: string) {
-    let newSelectedFilters = {...selectedFilters}
+  function deleteChip(checkedFilter: FilterCategory) {
+    let newSelectedFilters = [...selectedFilters]
 
-    const index = newSelectedFilters[category].indexOf(chip);
+    const index = newSelectedFilters.indexOf(checkedFilter);
     if (index > -1) {
-      newSelectedFilters[category].splice(index, 1); 
+      newSelectedFilters.splice(index, 1); 
     } 
     setSelectedFilters(newSelectedFilters)
   }
 
-  const handleChecked = (checkboxFilter: string) => {
-    if (selectedFilters['checkboxes'].includes(checkboxFilter)) {
-      deleteChip('checkboxes', checkboxFilter)
+  const handleChecked = (checkedFilter: FilterCategory) => {
+    const categoryFilters = selectedFilters.filter(e=>e.category == checkedFilter.category).map(e=>e.title)
+
+    if (categoryFilters.includes(checkedFilter.title)) {
+      deleteChip(checkedFilter)
     } else {
-      let newSelectedFilters = {...selectedFilters}
-      newSelectedFilters['checkboxes'].push(checkboxFilter)
+      let newSelectedFilters = [...selectedFilters]
+      newSelectedFilters.push(checkedFilter)
       setSelectedFilters(newSelectedFilters)
     }
   }
-
   return (
     <Stack sx={{ m: 1, flexGrow: 1 }} spacing={2}>
       <Stack direction="row">
@@ -63,9 +49,12 @@ export default function Filters() {
       </Typography>
 
       <Stack direction="row" spacing={1.5}>
-        {Object.keys(filters).map(e => (
+        {Object.keys(filters).map(e => {
+          return (
           <FilterSelect key={e} filterCategory={e} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
-        ))}
+          )
+        }
+        )}
       </Stack> 
 
       <Typography>
@@ -80,29 +69,20 @@ export default function Filters() {
             sx={{marginRight: 0}}
             control={
               <Checkbox 
-                checked={selectedFilters['checkboxes'].includes(e.title)} 
-                onChange={() => handleChecked(e.title)}
+                checked={selectedFilters.filter(e => e.category == 'checkboxes').map(e => e.title).includes(e.title)} 
+                onChange={() => handleChecked(e)}
               />
             }
           />
         ))}
-      </Stack> 
+      </Stack>  
 
       <Divider />
 
       <Stack direction="row" spacing={1.5}>
-        {Object.keys(FilterCategories).map(category => (
-          <>
-          {selectedFilters[category].map(e => (
-            <Chip key={e} label={e} onDelete={() => deleteChip(category, e)} />
-          ))}
-          </>
+        {selectedFilters.map(e =>(
+          <Chip key={e.title} label={e.title} onDelete={() => deleteChip(e)} />
         ))}
-
-        {FilterChips.map(e => (
-          <Chip key={e.title} label={e.title} onDelete={() => deleteChip(e.category, e.title)} />
-        ))}
-        
       </Stack> 
 
     </Stack>
