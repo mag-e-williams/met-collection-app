@@ -3,8 +3,12 @@ import axios from "axios";
 
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1/'
 
+type fetchDataResponse = {
+  response: MetObjectsData[] 
+}
+
 // returns a list of MetObjects with fill data, given the list of IDs and page number
-export async function fetchMetObjectsData(objectIDs: number[], page: number = 1, limit?: number): Promise<MetObjectsData[]> {
+export async function fetchMetObjectsData(objectIDs: number[], page: number = 1, limit: number = 40): Promise<fetchDataResponse> {
   let pageObjects = objectIDs;
   if (limit) {
     const start = (page-1) * limit
@@ -22,8 +26,12 @@ export async function fetchMetObjectsData(objectIDs: number[], page: number = 1,
         console.error('Error fetching object: ' + objId);
       }
     }));
-    return pageObjectDetails;
+    return {
+      response: pageObjectDetails
+    };
   }
-  return []
+  return {
+    response: []
+  }
 
 }

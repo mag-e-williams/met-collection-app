@@ -6,29 +6,29 @@ import { NextApiRequest } from "next";
 const BASE_URL = 'https://collectionapi.metmuseum.org/public/collection/v1/'
 
 // returns MetSearchResponse, which includes the list of objectIDs, and the total num of results
-export async function fetchMetObjects(): Promise<MetObjects> {
-  let api_endpoint = 'objects'
+export async function fetchMetObjects(req: NextApiRequest): Promise<MetObjects> {
 
+  let { page, limit, q } = req.query
+
+  const page_num = Number(page) || 1
+  const limit_num = Number(limit) || 40
+
+  let start = (Number(page_num)-1) * limit_num
+  let end = start + limit_num
+
+  const  api_endpoint = q ? 'seach' : 'objects'
   const config: AxiosRequestConfig = {};
+  config.params = {
+    q: q ? q : '*',
+  }
+  console.log(BASE_URL + api_endpoint)
 
-  // if (req && Object.keys(req.query).length) {
-  //   api_endpoint = 'search'
-  //   config.params = { ...req.query };
-
-  //   // search endpoint only works if there is a 'q' param
-  //   // if no q, replace with blank character
-  //   const { q } = req.query
-  //   if (!q) { 
-  //     config.params = {
-  //       q: '*',
-  //       ...req.query
-  //     }
-  //   } 
-  // }
- 
   const { data } = await axios.get(BASE_URL + api_endpoint, config);
   return {
     ...data, 
+    page: page_num, 
+    limit: limit_num,
+    objectIDs: data.objectIDs.slice(start,end)
   }
  
 }

@@ -1,17 +1,26 @@
 
 import { fetchMetObjects } from "@/api/server/fetchMetObjects"
-import { MetObjects } from "@/types/MetObjects"
+import { fetchMetObjectsData } from "@/api/server/fetchMetObjectsData"
+import { MetObjectsData } from "@/types/MetObjectsData";
 import { NextApiRequest, NextApiResponse } from "next"
 
-type ResponseData = {
-  result?: MetObjects,
-  error?: string
-}
+type ResponseType = {
+  total: number,
+  page: number, 
+  limit: number,
+  response: MetObjectsData[]
+};
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseData>) {
+type ErrorType = {
+  error?: string;
+};
+
+export default async function handler(req: NextApiRequest, res: NextApiResponse<ResponseType | ErrorType>) {
   try {
-    const result = await fetchMetObjects()
-    res.status(200).json({ result })
+    const { total, page, limit, objectIDs } = await fetchMetObjects(req)
+    const { response } = await fetchMetObjectsData(objectIDs)
+    
+    res.status(200).json({ total, page, limit, response })
   } catch (err) {
     res.status(500).json({ error: 'failed to load data' })
   }

@@ -3,8 +3,49 @@ import React from 'react';
 import { Checkbox,Chip,Divider, FormControlLabel, Stack, Typography } from '@mui/material';
 import { filters, checkboxFilters, FilterCategory } from '@/utils/filters';
 
+import FilterDropdownLayout, { AccordionElem } from './FilterDropdown';
 import FilterSelect from './FilterSelect';
 import FilterSearch from './FilterSearch';
+import FilterChips from './FilterChips';
+
+
+type FilterContentProps =  {
+  selectedFilters: FilterCategory[]; 
+  setSelectedFilters: (e: FilterCategory[]) => void;
+  handleChecked: (e: FilterCategory) => void;
+}
+
+const FilterContent = ({selectedFilters, setSelectedFilters, handleChecked}: FilterContentProps) => {
+  return (
+    <>
+      <Stack direction="row" spacing={1.5} sx={{paddingY:2}}>
+        {Object.keys(filters).map(e => (
+          <FilterSelect key={e} filterCategory={e} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
+        ))}
+      </Stack> 
+
+      <Typography variant="h6">
+        Show Only:
+      </Typography>
+      
+      <Stack direction="row" spacing={1}>
+        {checkboxFilters.filter(e=> e.category == 'checkboxes').map(e => (
+          <FormControlLabel 
+            key={e.title} 
+            label={e.title}
+            sx={{marginRight: 0}}
+            control={
+              <Checkbox 
+                checked={selectedFilters.filter(e => e.category == 'checkboxes').map(e => e.title).includes(e.title)} 
+                onChange={() => handleChecked(e)}
+              />
+            }
+          />
+        ))}
+      </Stack>  
+    </>
+  )
+}
 
 type FilterProps =  {
   searchTerm: string;
@@ -38,47 +79,29 @@ export default function Filters({searchTerm, setSearchTerm, selectedFilters, set
     }
   }
 
+
+
+  const FILTERS = () => {
+    return [
+      {
+        title: 'Filter By',
+        id: 'filter',
+        body: <FilterContent selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters} handleChecked={handleChecked} />
+      }
+    ]
+  }
+
   return (
     <Stack sx={{ m: 1, flexGrow: 1 }} spacing={2}>
       <FilterSearch searchTerm={searchTerm || ''} setSearchTerm={setSearchTerm}/>
-
-      <Typography>
-        Filter By
-      </Typography>
-
-      <Stack direction="row" spacing={1.5}>
-        {Object.keys(filters).map(e => (
-          <FilterSelect key={e} filterCategory={e} selectedFilters={selectedFilters} setSelectedFilters={setSelectedFilters}/>
-        ))}
-      </Stack> 
-
-      <Typography>
-        Show Only
-      </Typography>
       
-      <Stack direction="row" spacing={1}>
-        {checkboxFilters.filter(e=> e.category == 'checkboxes').map(e => (
-          <FormControlLabel 
-            key={e.title} 
-            label={e.title}
-            sx={{marginRight: 0}}
-            control={
-              <Checkbox 
-                checked={selectedFilters.filter(e => e.category == 'checkboxes').map(e => e.title).includes(e.title)} 
-                onChange={() => handleChecked(e)}
-              />
-            }
-          />
-        ))}
-      </Stack>  
+      <Divider />
+
+      <FilterDropdownLayout content={FILTERS()}/>
 
       <Divider />
 
-      <Stack direction="row" spacing={1.5}>
-        {selectedFilters.map(e =>(
-          <Chip key={e.title} label={e.title} onDelete={() => deleteChip(e)} />
-        ))}
-      </Stack> 
+      <FilterChips selectedFilters={selectedFilters} deleteChip={deleteChip} />
 
     </Stack>
   );

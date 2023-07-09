@@ -1,5 +1,6 @@
 export type MetObjects = {
-    searchTerm: string,
     total: number,
+    page: number, 
+    limit: number,
     objectIDs: number[]
 }

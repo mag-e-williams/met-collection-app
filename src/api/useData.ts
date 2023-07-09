@@ -12,10 +12,5 @@ const fetcher = (url: string) => fetch(url).then((res) => res.json());
 export function useData(key: string) {
   const isImmutable = false;
 
-  return useSWR(key, fetcher,  {
-    revalidateIfStale: !isImmutable,
-    revalidateOnFocus: !isImmutable,
-    revalidateOnReconnect: !isImmutable,
-  })
-  
+  return useSWR(key, fetcher)
 }
