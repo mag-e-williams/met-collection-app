@@ -76,7 +76,7 @@ type ObjectListProps =  {
   objects?: MetObjectsData[];
 };
 
-export default function ObjectList({objects}: ObjectListProps) {
+export default function CollectionList({objects}: ObjectListProps) {
   const router = useRouter();
 
   if (!objects) {

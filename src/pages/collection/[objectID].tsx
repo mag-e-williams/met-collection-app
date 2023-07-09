@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import Header from '@/components/Header';
 import { useRouter } from 'next/router'
 import { MetObjectsData } from '@/types/MetObjectsData';
-import { fetchMetObjectsData } from '@/api/fetchMetObjectsData';
+import { fetchMetObjectsData } from '@/api/server/fetchMetObjectsData';
 import { Container, Stack, Typography } from '@mui/material';
 
 export default function Collection() {

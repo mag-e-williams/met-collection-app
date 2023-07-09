@@ -1,18 +1,21 @@
 import React, { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
 
-import { fetchMetObjects } from '@/api/fetchMetObjects';
-import { fetchMetObjectsData } from '@/api/fetchMetObjectsData';
+import { fetchMetObjects } from '@/api/server/fetchMetObjects';
+import { fetchMetObjectsData } from '@/api/server/fetchMetObjectsData';
 
 import type { MetObjectsData } from '@/types/MetObjectsData';
 import type { MetObjects } from '@/types/MetObjects';
 
 import Header from '@/components/Header';
-import ObjectList from '@/components/ObjectList';
-import Filters from '@/components/Filters';
+import CollectionList from './CollectionList';
+import Filters from '@/components/filters/Filters';
 
 import { Container, Pagination, Stack, Typography } from '@mui/material';
 import { FilterCategory, checkboxFilters, filters } from '@/utils/filters';
+import axios from "axios";
+import useSWR from 'swr';
+import { useData } from '@/api/useData';
 
 const PAGE_SIZE = 40;
 
@@ -28,31 +31,37 @@ function groupBy(objectArray: any[], property: string) {
   }, {});
 }
 
-export default function Collection() {
+export default function CollectionPage() {
   const router = useRouter();
   const [museumObjects, setMuseumObjects] = useState<MetObjects>();
   const [museumObjectsData, setMuseumObjectsData] = useState<MetObjectsData[]>([]);
 
   const [page, setPage] = useState<number>(Number(router.query.page) || 1);
-  const [searchTerm, setSearchTerm] = useState<string>(router.query.search as string);
+  const [searchTerm, setSearchTerm] = useState<string>(router.query.q as string);
   const [selectedFilters, setSelectedFilters] = useState<FilterCategory[]>([]);
   const [totalPages, setTotalPages] = useState<number>();
 
-  useEffect(() => {
-    const fetchObjects = async () => {
-      const response = await fetchMetObjects(searchTerm, selectedFilters);
-      setMuseumObjects(response)
-      setTotalPages(Math.ceil(response.total / PAGE_SIZE))
-    }
-    if (searchTerm) {
-      fetchObjects()
-    }
-  }, [searchTerm, selectedFilters, setMuseumObjects, setTotalPages]);
+  const { data: objectIDs, error, isLoading } = useData('/api' + router.asPath)
+  console.log(objectIDs, isLoading)
+  // useEffect(() => {
+  //   const fetchObjects = async () => {
+  //     console.log(router.asPath)
+
+  //     // const response = await axios.get('/api' + router.asPath);
+  //     // console.log('/api' + router.asPath)
+  //     const objects = data.result
+  //     setMuseumObjects(objects)
+  //     console.log(router, router.query)
+  //     setTotalPages(Math.ceil(objects.total / PAGE_SIZE))
+  //   }
+  //     fetchObjects()
+
+  // }, [router, setMuseumObjects, setTotalPages]);
 
   useEffect(() => {
     const fetchObjectsData = async () => {
       if (museumObjects) {
-        const response = await fetchMetObjectsData(museumObjects.objectIDs, page, PAGE_SIZE);
+        const response = await fetchMetObjectsData(objectIDs, page, PAGE_SIZE);
         setMuseumObjectsData(response)
       }
     }
@@ -81,10 +90,10 @@ export default function Collection() {
   const updateURL = (selectedPage: number, term?: string, filterParams?: FilterCategory[] ) => {
     let queryParams = new URLSearchParams();
     if (selectedPage) {
-      queryParams.append('page',  selectedPage.toString())
+      // queryParams.append('page',  selectedPage.toString())
     }
     if (term) {
-      queryParams.append('search', term)
+      queryParams.append('q', term)
     }
 
     if (filterParams) {
@@ -136,7 +145,7 @@ export default function Collection() {
         </Stack>
 
         <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={handleFilter}/>
-        <ObjectList objects={museumObjectsData}/> 
+        <CollectionList objects={museumObjectsData}/> 
         
         <Container 
           sx={{ 
