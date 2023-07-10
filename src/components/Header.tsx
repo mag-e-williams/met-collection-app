@@ -44,7 +44,7 @@ export default function Header() {
                 });
               }}
               sx={{
-                mr: 2,
+                m: 2,
                 display: 'flex',
                 textDecoration: 'none',
                 flexGrow: 1,

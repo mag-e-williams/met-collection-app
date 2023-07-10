@@ -7,17 +7,15 @@ import { Meta } from '../utilComponents/Meta';
 
 type PageLayoutProps<Keys extends EndpointKey> = {
   children: React.ReactNode;
-  fallback: FetchedFallbackData<Keys>;
+  fallback?: FetchedFallbackData<Keys>;
 };
 
 export function PageLayout<Key extends EndpointKey>({ children, fallback }: PageLayoutProps<Key>) {
   return (
-    <SWRConfig value={{ fallback }}>
+    <SWRConfig>
       <Meta />
       <Header  />
-      <Container>
-        <main>{children}</main>
-      </Container>
+      <main>{children}</main>
     </SWRConfig>
   );
 }

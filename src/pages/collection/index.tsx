@@ -8,13 +8,8 @@ type PageProps = {
 };
 
 function Page() {
-  return <CollectionPage />;
+  return <PageLayout><CollectionPage /></PageLayout>;
 }
 
-const getLayout: GetLayout<PageProps> = (page, pageProps) => (
-  <PageLayout fallback={pageProps.fallback}>{page}</PageLayout>
-);
-
-Page.getLayout = getLayout;
 
 export default Page;

@@ -25,7 +25,7 @@ export default function CollectionPage() {
   const { data, error, isValidating } = useData('/api' + router.asPath);
 
   useEffect(() => {
-    if (data) {
+    if (data && !data.error) {
       const { total, page, limit, response } = data;
       setFetchedCollection(response);
       console.log(Math.ceil(total / limit))
@@ -69,41 +69,37 @@ export default function CollectionPage() {
   };
 
   return (
-    <>
-      <Header />
+    <Container sx={{marginTop: 12}}>
+      <Stack direction="row" sx={{ alignItems: 'baseline' }} justifyContent="space-between">
+        <Typography variant="h2" sx={{ marginBottom: 4 }}>
+          Search The Collection
+        </Typography>
 
-      <Container sx={{ marginTop: 14 }}>
-        <Stack direction="row" sx={{ alignItems: 'baseline' }} justifyContent="space-between">
-          <Typography variant="h2" sx={{ marginBottom: 4 }}>
-            Search The Collection
-          </Typography>
+        <Typography variant="h6" sx={{ marginBottom: 4 }}>
+          {fetchedTotal.toLocaleString()} results {searchTerm && searchTerm !== '' ? `for ${searchTerm}` : ''}
+        </Typography>
+      </Stack>
 
-          <Typography variant="h6" sx={{ marginBottom: 4 }}>
-            {fetchedTotal.toLocaleString()} results {searchTerm && searchTerm !== '' ? `for ${searchTerm}` : ''}
-          </Typography>
-        </Stack>
+      <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={handleFilter} />
 
-        <Filters searchTerm={searchTerm || ''} setSearchTerm={handleSearch} selectedFilters={selectedFilters} setSelectedFilters={handleFilter} />
+      <CollectionList objects={fetchedCollection} />
 
-        <CollectionList objects={fetchedCollection} />
-
-        <Container
-          sx={{
-            marginY: 6,
-            display: 'flex',
-            justifyContent: 'center',
-          }}
-        >
-          <Pagination
-            count={totalPages}
-            page={page}
-            onChange={handlePageChange}
-            size="small"
-            showFirstButton
-            showLastButton
-          />
-        </Container>
+      <Container
+        sx={{
+          marginY: 6,
+          display: 'flex',
+          justifyContent: 'center',
+        }}
+      >
+        <Pagination
+          count={totalPages}
+          page={page}
+          onChange={handlePageChange}
+          size="small"
+          showFirstButton
+          showLastButton
+        />
       </Container>
-    </>
+    </Container>
   );
 }
